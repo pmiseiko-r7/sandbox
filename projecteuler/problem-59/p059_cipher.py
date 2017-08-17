@@ -36,17 +36,20 @@ def findKey(cipherOctets, dictionaryWords, validWordThreshold):
     # Now test if the key produced real english.
     wordCount = 0
     validWordCount = 0
-    for m in re.finditer("([a-zA-Z]+)", resultChars):
-     word = m.group(1)
+    invalidWords = []
+    for m in re.finditer("([a-zA-Z']+)", resultChars):
+     word = m.group(1).lower()
      wordCount += 1
      if word in dictionaryWords:
       validWordCount += 1
+     else:
+      invalidWords.append(word)
     validWordPercentage = float(validWordCount) / wordCount
     if validWordPercentage >= validWordThreshold:
-     print "Key output has", wordCount, "word(s) with", validWordCount, "valid."
-     print "Key output has", validWordPercentage, "% valid word(s)."
-     print "Key output:", resultChars
-     matches.append((keyChars, wordCount, validWordCount, resultChars))
+     # print "Key output has", wordCount, "word(s) with", validWordCount, "valid."
+     # print "Key output has", validWordPercentage, "% valid word(s)."
+     # print "Key output:", resultChars
+     matches.append((keyChars, wordCount, validWordCount, invalidWords, resultChars))
     else:
      # print "Key", keyChars, "incorrect."
      pass
@@ -55,7 +58,7 @@ def findKey(cipherOctets, dictionaryWords, validWordThreshold):
 with open("/usr/share/dict/words", "r") as dictionaryFile:
  dictionaryWords = []
  for line in dictionaryFile:
-  dictionaryWord = line.strip()
+  dictionaryWord = line.strip().lower()
   dictionaryWords.append(dictionaryWord)
  with open("p059_cipher.txt", "r") as cipherFile:
   data = cipherFile.read()
@@ -63,8 +66,9 @@ with open("/usr/share/dict/words", "r") as dictionaryFile:
   for octet in data.split(","):
    cipherOctets.append(int(octet))
   for match in findKey(cipherOctets, dictionaryWords, 0.80):
-   key, wordCount, validWordCount, text = match
+   key, wordCount, validWordCount, invalidWords, text = match
    print "Key:", key
    print "Word Count:", wordCount
    print "Valid Word Count:", validWordCount
+   print "Invalid word(s):", invalidWords
    print "Text:", text
