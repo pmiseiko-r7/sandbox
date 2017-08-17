@@ -8,7 +8,7 @@ inData = b"The quick brown fox jumps over the lazy dog"
 def crypt(secret, inData, encrypt):
  outData = []
  secretHash = hashlib.sha256()
- secretHash.update(secret.encode())
+ secretHash.update(secret.encode("latin_1"))
  secretDigest = secretHash.digest()
  randomnessHash = hashlib.sha256()
  randomnessHash.update(secretDigest)
@@ -21,10 +21,10 @@ def crypt(secret, inData, encrypt):
   randomnessIndex = 0
   while inDataIndex < len(inData) and randomnessIndex < len(randomnessDigest):
    if encrypt:
-    randomnessHash.update(chr((inDataIndex & 0xFF) ^ inData[inDataIndex]).encode())
+    randomnessHash.update(chr((inDataIndex & 0xFF) ^ inData[inDataIndex]).encode("latin_1"))
    outByte = inData[inDataIndex] ^ randomnessDigest[randomnessIndex]
    if not encrypt:
-    randomnessHash.update(chr((inDataIndex & 0xFF) ^ outByte).encode())
+    randomnessHash.update(chr((inDataIndex & 0xFF) ^ outByte).encode("latin_1"))
    outData.append(chr(outByte))
    if encrypt:
     print("%c 0x%02X (%03d) ^ 0x%02X (%03d) = 0x%02X" % (
