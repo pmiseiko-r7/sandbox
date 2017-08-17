@@ -41,17 +41,15 @@ def findKey(cipherOctets, dictionaryWords, validWordThreshold):
      wordCount += 1
      if word in dictionaryWords:
       validWordCount += 1
-    # Must be at least 1 valid word.
-    if validWordCount > 0:
-     validWordPercentage = float(validWordCount) / wordCount
-     if validWordPercentage >= validWordThreshold:
-      print "Key output has", wordCount, "word(s) with", validWordCount, "valid."
-      print "Key output has", validWordPercentage, "% valid word(s)."
-      print "Key output:", resultChars
-      matches.append((keyChars, wordCount, validWordCount, resultChars))
-     else:
-      # print "Key", keyChars, "incorrect."
-      pass
+    validWordPercentage = float(validWordCount) / wordCount
+    if validWordPercentage >= validWordThreshold:
+     print "Key output has", wordCount, "word(s) with", validWordCount, "valid."
+     print "Key output has", validWordPercentage, "% valid word(s)."
+     print "Key output:", resultChars
+     matches.append((keyChars, wordCount, validWordCount, resultChars))
+    else:
+     # print "Key", keyChars, "incorrect."
+     pass
  return matches
 
 with open("/usr/share/dict/words", "r") as dictionaryFile:
